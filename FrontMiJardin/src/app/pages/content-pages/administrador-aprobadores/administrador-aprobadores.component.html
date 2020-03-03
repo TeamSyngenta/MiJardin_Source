@@ -1,0 +1,177 @@
+<section id="filter" class="mb-3">
+    <div class="row text-left">
+        <div class="col-sm-12 bg-white pl-3 pt-3 pb-1 mb-3">
+            <h4 class="content-header">Administraci&oacute;n Flujo Aprobaci&oacute;n</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="row text-center">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header">
+                        </div>
+                        <div class="card-body">
+                            <div class="row col-sm-12">
+                                <div class="col-sm-3">
+                                    <label for="idUnidadComercial">Unidad comercial *</label>
+                                    <select type="text" class="form-control" id="idUnidadComercial" [(ngModel)]="datosBusquedaAprobadores.idUnidadComercial">
+                                        <option selected [value]="0">Seleccione</option>
+                                        <option *ngFor="let UnidadComercial of listaUnidadComercial" [value]="UnidadComercial.idTipo">{{UnidadComercial.nombre}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label for="idNegocio">Negocio *</label>
+                                    <select type="text" class="form-control" id="idNegocio" [(ngModel)]="datosBusquedaAprobadores.idNegocio">
+                                        <option selected [value]="0">Seleccione</option>
+                                        <option *ngFor="let negocio of listaNegocios" [value]="negocio.idTipo">{{negocio.nombre}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="idConcepto">Concepto *</label>
+                                    <select type="text" class="form-control" id="idConcepto" (change)="ObtenerMontosAprobadores($event.target.value)" [(ngModel)]="datosBusquedaAprobadores.idConcepto">
+                                        <option selected [value]="0">Seleccione</option>
+                                        <option *ngFor="let concepto of listaConceptos" [value]="concepto.idTipo">{{concepto.nombre}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="idMonto">Monto *</label>
+                                    <select type="text" class="form-control" id="idMonto" [(ngModel)]="datosBusquedaAprobadores.idMonto">
+                                        <option selected [value]="0">Seleccione</option>
+                                        <option *ngFor="let montos of listaMontoAprobadores" [value]="montos.idTipo">{{montos.nombre}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row col-sm-12">
+                                <div class="col-sm-2 offset-sm-10 ">
+                                    <button class="btn btn-success" id="buscar" (click)="BuscarAprobadores(modalSinResultados,mensajeModalValidacionCampos)"><i class="ft-search"></i> Buscar</button>
+                                </div>
+                            </div>
+                            <div class="row col-sm-9" align="center">
+                                <div id="obligatoriosInfoCliente">(*) Campos Obligatorios</div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="row text-center">
+                <div class="col-sm-12">
+                    <div class="table-responsive">
+                        <div class="card">
+                            <div class="card-body col-sm-8">
+                                <h5 class="text-center">Aprobadores</h5>
+                                <table class="table table-responsive-sm text-center">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>UserName</th>
+                                            <th>Nombre</th>
+                                            <th>Acciones</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="text-center" *ngFor="let aprobadores of listaAprobadores ; let i = index">
+                                            <th scope="row" >{{aprobadores.idOrden}}</th>
+                                            <td>
+                                                <input type="text" class="form-control" id="userName" [(ngModel)]="aprobadores.userName" (change)="ocultarNombre(i)">
+                                            </td>
+                                            <td>
+                                                <div>{{aprobadores.nombre}}</div> 
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-success" id="validar" style="min-width:50%" (click)="validarUserNameAprobador(aprobadores,modalSinResultadoUsername,mensajeModalConfirmacion)" [disabled]=aprobadores.activarBtnActualizar>Actualizar</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--Inicio modal Sin resultados-->
+<ng-template #modalSinResultados let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">ADMINISTRACI&Oacute;N FLUJO APROBACI&Oacute;N - CONSULTA SIN RESULTADO</h6>
+    </div>
+    <div class="modal-body">
+        <span>No se encontraron resultados para la b&uacute;squeda realizada</span>
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-danger" (click)="modal.close('Save click')">
+            <a class="text-decoration-none">Cerrar</a>
+        </button>
+    </div>
+</ng-template>
+<!--Fin modal Detalles-->
+<!--Inicio modal ValidacionCampos-->
+<ng-template #mensajeModalValidacionCampos let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">ADMINISTRACI&Oacute;N FLUJO APROBACI&Oacute;N - DATO FALTANTE</h6>
+    </div>
+    <div class="modal-body">
+        <span>{{mensajePOPUP}}</span>
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-danger" (click)="modal.close('Save click')">
+            <a class="text-decoration-none">Cerrar</a>
+        </button>
+    </div>
+</ng-template>
+<!--Fin modal ValidacionCampos-->
+<!--Inicio modal confirmacion-->
+<ng-template #mensajeModalConfirmacion let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">SERVICIO CLIENTE - CONFIRMACI&Oacute;N</h6>
+    </div>
+    <div class="modal-body">
+        <span>&iquest;Est&aacute; seguro de actualizar el UserName de este flujo de aprobaci&oacute;n?</span>
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-default mb-0" (click)="ActualizarUserNameAprobador(modalActualizacionAprobador,modal.close('Save click'))">
+            <a class="text-decoration-none">Aceptar</a>
+        </button>
+        <button mat-raised-button color="accent" class="btn btn-primary" (click)="modal.close('Save click')">
+            <a class="text-decoration-none">Cancelar</a>
+        </button>
+    </div>
+</ng-template>
+<!--Final modal confirmacion-->
+<ng-template #modalSinResultadoUsername let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">ADMINISTRACI&Oacute;N FLUJO APROBACI&Oacute;N - VALIDACI&Oacute;N USERNAME</h6>
+    </div>
+    <div class="modal-body">
+        <span>El UserName del aprobador ingresado no existe o es incorrecto</span>
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-danger" (click)="BuscarAprobadores(modalSinResultados,mensajeModalValidacionCampos,modal.close('Save click'))">
+            <a class="text-decoration-none">Cerrar</a>
+        </button>
+    </div>
+</ng-template>
+<ng-template #modalActualizacionAprobador let-modal>
+   
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">ADMINISTRACI&Oacute;N FLUJO APROBACI&Oacute;N - CONFIRMACI&Oacute;N</h6>
+    </div>
+    <div class="modal-body">
+        <span>El aprobador ha sido actualizado correctamente</span>
+
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-danger" (click)="modal.close('Save click')">
+            <a class="text-decoration-none">Cerrar</a>
+        </button>
+    </div>
+</ng-template>

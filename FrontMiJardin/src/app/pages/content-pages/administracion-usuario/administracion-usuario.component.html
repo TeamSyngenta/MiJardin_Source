@@ -1,0 +1,201 @@
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<div class="row " *ngIf="validarRolActivoUsuario === true; else sinRolAutorizado">
+    <div class="col-sm-12 bg-white pl-3 pt-3 pb-1 mb-3">
+        <h1 class="content-header">Administración de usuarios</h1>
+    </div>
+</div>
+<div class="container-fluid">
+    <section>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Crear usuario</h4>
+                    </div>
+                    <form #agregarUsuario="ngForm">
+                        <div class="card-body">
+                            <div class="col-sm-12 pl-3 pt-3 pb-1 mb-3">
+                                <div class="form-row col-sm-12 ">
+                                    <div class="form-group col-sm-6">
+                                        <div class="form-group col-sm-8">
+                                            <label for="userName">Usuario (*)</label>
+                                            <input type="text" name="userName" class="form-control" placeholder="Usuario" [(ngModel)]=usuarioNuevo.userName pattern="^\w+$">
+                                        </div>
+                                        <div class="form-group col-sm-8">
+                                            <label for="nombre">Nombre (*)</label>
+                                            <input type="text" name="nombre" class="form-control  ng-dirty ng-invalid ng-touched" placeholder="Nombre" [(ngModel)]=usuarioNuevo.nombre pattern="^\w+$">
+                                        </div>
+                                        <div class="form-group col-sm-8">
+                                            <label for="pass">Contraseña (*) <strong>(Min. 4 caracteres)</strong></label>
+                                            <input type="password" name="pass" class="form-control ng-dirty ng-valid ng-touched" placeholder="Contraseña" [(ngModel)]=usuarioNuevo.password min="4">
+                                        </div>
+                                        <label id="textoRoles" for="pass">Roles (*)</label>
+                                        <div *ngFor="let rol of roles">
+                                            <div class="col-sm-8">
+                                                <input #rolSeleccionado type="checkbox" value="{{ rol.idTipo }}" (click)="listaRoles(rolSeleccionado)">
+                                                &nbsp;<label> {{rol.nombre}} </label>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="col-sm-8" id="obligatorios">(*) Campos Obligatorios</div>
+                                        <br />
+                                        <p style="padding-left: 15px"> El sistema no permite cambio de contraseña</p>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <div class="form-group col-sm-8">
+                                            <label for="email">Correo Electrónico  (*)</label>
+                                            <input type="email" name="email" class="form-control ng-dirty ng-valid ng-touched" placeholder="Correo Electrónico" [(ngModel)]=usuarioNuevo.correo email="true" pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$">
+                                        </div>
+                                        <div class="form-group col-sm-8">
+                                            <label for="apellido">Apellido (*)</label>
+                                            <input type="text" name="apellido" n class="form-control ng-dirty ng-valid ng-touched" placeholder="Apellido" [(ngModel)]=usuarioNuevo.apellido pattern="^\w+$">
+                                        </div>
+                                        <div class="form-group col-sm-8" id="pass2">
+                                            <label for="pass2">Confirmar Contraseña (*)</label>
+                                            <input type="password" name="pass2" class="form-control ng-dirty ng-valid ng-touched" placeholder="Confirmar Contraseña" [(ngModel)]=usuarioNuevo.contrasena2 min="4">
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <br />
+                                            <div class="fg-actions d-flex pull-right">
+                                                <button class="btn btn-default mb-0" (click)="cancelarCrearUsuario(mensajeModalCancelar)">
+                                                    Cancelar
+                                                </button>
+                                                &nbsp;
+                                                <button class="btn btn-primary mb-0" (click)="onSubmit(agregarUsuario,mensajeModalError,mensajeModalGuardar)">
+                                                    <a class="text-decoration-none">Agregar</a>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="row text-center">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Usuarios del sistema </h4>
+                            </div>
+                            <div class="col-sm-12">
+                                <input type="text" name="buscarTexto" class="form-control col-sm-3 offset-sm-9" [(ngModel)]=buscarTexto placeholder="Buscar" (change)="actualizarPaginacion()">
+                            </div>
+                            <div class="table-responsive mt-3">
+                                <div class="card-body">
+                                    <table class="table table-responsive-sm text-center">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre de Usuario</th>
+                                                <th>Estado</th>
+                                                <th>Correo Electrónico</th>
+                                                <th>Roles</th>
+                                                <th>Modificar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let usuario of usuarios |filter:buscarTexto | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize  " class="text-center">
+                                                <td> {{usuario.userName}}</td>
+                                                <td>
+                                                    <input id="estadoUsuario" type="checkbox" class="form-check-input pull-center" [(ngModel)]=usuario.estado (click)="cambiarEstadoUsuario(usuario.idUsuario,usuario.estado,mensajeModalError)">
+                                                </td>
+                                                <td> {{usuario.correo}} </td>
+                                                <td>
+                                                    <div *ngFor="let rolN of usuario.lstRolesString">
+                                                        {{rolN}}<br>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <button mat-raised-button color="accent" class="btn btn-primary" (click)="modificarRoles(usuario.idUsuario,usuario.lstRolesString,modalModificarRoles, usuario.userName)">
+                                                        <a class="text-decoration-none">Roles</a>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="collectionSize"></ngb-pagination>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<ng-template #modalModificarRoles let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">Usuario: {{usuarioModificado}}</h6>
+    </div>
+    <div class="modal-body">
+        <div *ngFor="let rol of roles " class="col-sm-12">
+            <input #rolSeleccionado type="checkbox" class="form-check-input" value="{{ rol.idTipo }}" [checked]="validarRolesActivos(rol)" (click)="listaRoles(rolSeleccionado)">
+            <label class="text-info-300">{{rol.nombre}}</label>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-primary" (click)="actualizarRoles(mensajeModalError)">
+            <a class="text-decoration-none">Guardar</a>
+        </button>
+        <button mat-raised-button color="accent" class="btn btn-primary" (click)="modal.close('Save click')">
+            <a class="text-decoration-none">Cancelar</a>
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #mensajeModalError let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h5>
+    </div>
+    <div class="modal-body">
+        {{mensajePOPUP}}
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-danger" (click)="refrescarPagina(modal.close('Save click'))">
+            <a class="text-decoration-none">Cerrar</a>
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #mensajeModalGuardar let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h6>
+    </div>
+    <div class="modal-body">
+        {{mensajePOPUP}}
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-primary" (click)="guardarUsuario(mensajeModalError,modal.close('Save click'))">
+            <a class="text-decoration-none">Guardar</a>
+        </button>
+        <button mat-raised-button color="accent" class="btn btn-default mb-0" (click)="modal.close('Save click')">
+            <a class="text-decoration-none">Cancelar</a>
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #sinRolAutorizado let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="modal-basic-title">ERROR - SIN PERMISOS</h5>
+    </div>
+    <div class="modal-body">
+        Usted no puede ingregar a la funcionalidad de Administrar Usuario
+    </div>
+</ng-template>
+
+<ng-template #mensajeModalCancelar let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h6>
+    </div>
+    <div class="modal-body">
+        {{mensajePOPUP}}
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-default mb-0" (click)="ngOnInit(modal.close('Save click'))">
+            <a class="text-decoration-none">Aceptar</a>
+        </button>
+        <button mat-raised-button color="accent" class="btn btn-primary" (click)="modal.close('Save click')">
+            <a class="text-decoration-none">Cancelar</a>
+        </button>
+    </div>
+</ng-template>

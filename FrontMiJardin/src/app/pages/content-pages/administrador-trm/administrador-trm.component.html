@@ -1,0 +1,101 @@
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<div class="row ">
+    <div class="col-sm-12 bg-white pl-3 pt-3 pb-1 mb-3">
+        <h1 class="content-header">Administración TRM</h1>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row text-center">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-body">
+                        <table class="table table-responsive-md text-center">
+                            <thead>
+                                <tr id="titulos">
+                                    <td><b>Tipo Moneda</b></td>
+                                    <td><b>Valor Actual de 1 D&oacute;lar(USD$)</b></td>
+                                    <td><b>Nuevo Valor de 1 D&oacute;lar(USD$)*</b></td>
+                                </tr>
+                            </thead>
+                            <tr>
+                                <td>{{monedaPC.nombre}}</td>
+                                <td>$ {{monedaPC.valor}}</td>
+                                <td> <input type="text" class="form-control" [(ngModel)]="monedaPC.valorNF" placeholder="$" (change)="formatoMoneda(1)" mask="separator.2" thousandSeparator="," value="" /> </td>
+                            </tr>
+                            <tr>
+                                <td>{{monedaPM.nombre}}</td>
+                                <td>$ {{monedaPM.valor}}</td>
+                                <td> <input type="text" class="form-control" [(ngModel)]="monedaPM.valorNF" placeholder="$" (change)="formatoMoneda(2)" mask="separator.2" thousandSeparator="," value="" /> </td>
+                            </tr>
+                            <tr>
+                                <td>{{monedaQ.nombre}}</td>
+                                <td>Q {{monedaQ.valor}}</td>
+                                <td> <input type="text" class="form-control" [(ngModel)]="monedaQ.valorNF" placeholder="Q" (change)="formatoMoneda(3)" mask="separator.2" thousandSeparator="," value="" /> </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <p> <b>Nota: </b><i> El nuevo valor de tipo moneda, se debe ingresar con el valor actual de TRM, el cual se utilizar&aacute; para calcular el monto en d&oacute;lares de las notas contables </i> </p>
+                    <br>
+                    <p class="text-left" id="obligatoriosTRM">(*) Campos Obligatorios</p>
+                    <div class="row col-sm-12">
+                        <div class="form-group col-sm-12">
+                            <button class="btn btn-default" id="limpiar" (click)="limpiar(mensajeModalCancelar)">Limpiar</button>&nbsp;
+                            <button class="btn btn-success" id="guardar" (click)="guardar(mensajeModalGuardar,mensajeModalError)">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #mensajeModalError let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h5>
+    </div>
+    <div class="modal-body">
+        {{mensajePOPUP}}
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-danger" (click)="refrescarPagina(modal.close('Save click'))">
+            <a class="text-decoration-none">Cerrar</a>
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #mensajeModalGuardar let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h6>
+    </div>
+    <div class="modal-body">
+        {{mensajePOPUP}}
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-primary" (click)="confirmarGuardar(mensajeModalError,modal.close('Save click'))">
+            <a class="text-decoration-none">Guardar</a>
+        </button>
+        <button mat-raised-button color="accent" class="btn btn-default mb-0" (click)="modal.close('Save click')">
+            <a class="text-decoration-none">Cancelar</a>
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #mensajeModalCancelar let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h6>
+    </div>
+    <div class="modal-body">
+        {{mensajePOPUP}}
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-default mb-0" (click)="refrescarPagina()">
+            <a class="text-decoration-none">Aceptar</a>
+        </button>
+        <button mat-raised-button color="accent" class="btn btn-primary" (click)="modal.close('Save click')">
+            <a class="text-decoration-none">Cancelar</a>
+        </button>
+    </div>
+</ng-template>
+
+

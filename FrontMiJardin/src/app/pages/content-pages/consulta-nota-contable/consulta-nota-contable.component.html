@@ -1,0 +1,384 @@
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<div class="row ">
+    <div class="col-sm-12 bg-white pl-3 pt-3 pb-1 mb-3">
+        <h1 class="content-header">Consultar Notas Contables</h1>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row text-center">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="col-sm-12 col-sm-12 bg-white pl-3 pt-3 pb-1 mb-3">
+                        <div class="card-body">
+                            <div class="form-row col-sm-12 ">
+                                <div class="form-group col-sm-4">
+                                    <label for="idNotaContbale">Id nota contable</label>
+                                    <input type="number" class="form-control" id="idNotaContbale" placeholder="Id nota contable" [(ngModel)]="datosBusqueda.idNotaContable" />
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <label for="codCliente">C&oacute;d cliente</label>
+                                    <input type="text" class="form-control" id="codCliente" placeholder="C&oacute;d cliente" [(ngModel)]="datosBusqueda.codCliente" />
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="idEstadoNota">Estado</label>
+                                    <select type="text" class="form-control" id="idEstadoNota" [(ngModel)]="datosBusqueda.idEstadoNota">
+                                        <option [value]="0">Seleccione</option>
+                                        <option *ngFor="let estado of listaEstado" [value]="estado.idTipo">{{estado.nombre}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="idTipoNota">Tipo nota contable </label>
+                                    <select type="text" class="form-control" id="idTipoNota" [(ngModel)]="datosBusqueda.tipoNotaContable">
+                                        <option [value]="2">Seleccione</option>
+                                        <option [value]="0">Credito</option>
+                                        <option [value]="1">Debito</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <label for="idNotaSAP">Id nota contable SAP</label>
+                                    <input type="text" class="form-control" id="idNotaSAP" placeholder="Id nota contable SAP" [(ngModel)]="datosBusqueda.idNotaContableSap" />
+                                </div>
+                                <div class=" col-sm-4 card-body" id="card">
+                                    <label>Productos</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control " placeholder="Descripci&oacute;n Producto" aria-describedby="button-addon4" [(ngModel)]="nombreProductoMostar" [ngModelOptions]="{standalone: true}" readonly />
+                                        <div class=" input-group-append">
+                                            <button class="btn btn-success" type="button" id="botonModalProductos" (click)="mostrarProductos(modalBuscarProductos)"><i class="ft-search"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row align-items-center col-sm-12">
+                                <div class="form-group col-sm-3 offset-md-3">
+                                    <label for="idFechaInicial">Fecha inicio</label>
+                                    <input type="date" class="form-control" data-placement="top" id="idFechaInicial" [(ngModel)]="datosBusqueda.fechaInicio" />
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label for="idFechaFinal">Fecha fin</label>
+                                    <input type="date" class="form-control" data-placement="top" id="idFechaFinal" [(ngModel)]="datosBusqueda.fechaFinal" />
+                                </div>
+                            </div>
+                            <div class="form-row  col-sm-9">
+                                <button class="btn btn-default offset-md-6" id="limpiar" (click)="limpiarCerrar()">Limpiar</button>&nbsp;
+                                <button class="btn btn-success" id="buscar" (click)="buscar(mensajeModalError)"><i class="ft-search"></i> Buscar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-sm-12 bg-white pl-3 pt-3 pb-1 mb-3 ">
+                    <table class="table table-responsive-md text-center">
+                        <thead>
+                            <tr class="text-center">
+                                <th>Id Nota Contable</th>
+                                <th>Nombre Cliente</th>
+                                <th>Tipo  Nota</th>
+                                <th>Estado</th>
+                                <th>Fecha Creaci&oacute;n</th>
+                                <th>Monto USD</th>
+                                <th>Aprobador</th>
+                                <th>Usuario</th>
+                                <th colspan="2" >Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let notasContables of NotasC | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize " class="text-center" >
+                                <td>{{notasContables.idNotaContable}}</td>
+                                <td>{{notasContables.nombreCliente}}</td>
+                                <td>{{notasContables.tipoNota}}</td>
+                                <td>{{notasContables.estado}}</td>
+                                <td>{{notasContables.fechaCreacion  | date:'dd/MM/yyyy'}}</td>
+                                <td>{{notasContables.montoUSD}}</td>
+                                <td>{{notasContables.aprobador}}</td>
+                                <td>{{notasContables.usuarioCreacion}}</td>
+                                
+                                <td class="fonticon-wrap ">
+                                    <i id="icono" class="ft-edit-3" title="Modificar NC" routerLink="/modificarNC/{{notasContables.idNotaContable}}" [hidden]=notasContables.mostrarRecall ></i> 
+                                </td>
+                                <td class="fonticon-wrap ">
+                                    <i id="icono" class="ft-eye" title="Ver detalles NC" (click)="verDetalles(notasContables, (modalVerDetalles))"></i> 
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="collectionSize"></ngb-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #modalBuscarProductos let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title"><b>{{tituloPOPUP}}</b></h6>
+    </div>
+    <br />
+    <div>
+        <p [hidden]=ocultarMensajeDes>&nbsp;Para realizar la b&uacute;squeda por descripci&oacute;n ingrese m&iacute;nimo 4 caracteres</p>
+    </div>
+    <div>
+        <p [hidden]=ocultarMensajeCod>&nbsp;Para realizar la b&uacute;squeda por c&oacute;digo de material ingrese los d&iacute;gitos exactos</p>
+    </div>
+    <div class=" col-sm-12 card-body" id="card">
+        <div class="row col-sm-12">
+            <div class="input-group col-sm-6">
+                <input type="radio" id="parametroBusqueda" name="parametroBusqueda" value="true" [(ngModel)]="parametroBusqueda" (change)="visualizarMensaje()" /> <label for="descripcion" id="titulosBuscar">Descripci&oacute;n</label>
+            </div>
+            <div class="input-group col-sm-4 offset-2" id="inputBoton">
+                <input type="text" class="form-control" aria-describedby="button-addon4" [(ngModel)]="buscarProd" placeholder="Buscar" />
+                <div class=" input-group-append">
+                    <button class="btn btn-success" type="button" id="botonModalProductos" (click)="buscarProductos(buscarProd,parametroBusqueda,mensajeModalError2)"><i class="ft-search"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="row col-sm-12">
+            <div class="input-group col-sm-6">
+                <input type="radio" id="parametroBusqueda" name="parametroBusqueda" value="false" [(ngModel)]="parametroBusqueda" (change)="visualizarMensaje()" /> <label for="material" id="titulosBuscar">C&oacute;d. Material</label>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive" [hidden]=ocultarTablaProductos>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td>C&oacute;d. material</td>
+                    <td>Descripci&oacute;n</td>
+                    <td>Estado</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let produc of listaProductos | slice: (pagePro-1) * pageSizePro : (pagePro-1) * pageSizePro + pageSizePro">
+                    <td>{{produc.material}}</td>
+                    <td>{{produc.nombre}}</td>
+                    <td>{{produc.estado}}</td>
+                    <td><div class="material-icons col-sm-2" id="agregarPro" (click)="SeleccionarProducto(produc,modal.close('Save click'))">add_circle</div>
+                </tr>
+            </tbody>
+        </table>
+        <ngb-pagination [(page)]="pagePro" [pageSize]="pageSizePro" [collectionSize]="collectionSizePro"></ngb-pagination>
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-primary" (click)="modal.close('Save click',limpiarCerrar())">
+            <a class="text-decoration-none">Cancelar</a>
+        </button>
+    </div>
+</ng-template>
+<ng-template #mensajeModalError let-modal data-backdrop="static" data-keyboard="false">
+    <div class="modal-header">
+        <h5 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h5>
+    </div>
+    <div class="modal-body">
+        {{mensajePOPUP}}
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-danger" (click)="modal.close('Save click',limpiarCerrar())">
+            <a class="text-decoration-none">Cerrar</a>
+        </button>
+    </div>
+</ng-template>
+<ng-template #modalVerDetalles let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h6>
+    </div>
+    <div class="accordion" id="accordionExample">
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <h2 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#informacionCliente" aria-expanded="true" aria-controls="informacionCliente">
+                        Informaci&oacute;n Cliente
+                    </button>
+                </h2>
+            </div>
+            <div id="informacionCliente" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                    <table class="table-responsive-md table-hover  ">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Id cliente</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{listaDetalles.idCliente}}</td>
+                                <td>{{listaDetalles.nombreCliente}}</td>
+                                <td>{{listaDetalles.organizacionCliente}}</td>
+                            </tr>
+                        </tbody>
+                        <thead>
+                            <tr>
+                                <th>Tel&eacute;fono</th>
+                                <th>Direcci&oacute;n</th>
+                                <th>Ciudad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{listaDetalles.telefonoCliente}}</td>
+                                <td>{{listaDetalles.direccionCliente}}</td>
+                                <td>{{listaDetalles.ciudad}}</td>
+                            </tr>
+                        </tbody>
+                        <thead>
+                            <tr>
+                                <th>Regi&oacute;n</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{listaDetalles.region}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#datosNotacontable" aria-expanded="false" aria-controls="datosNotacontable">
+                        Informaci&oacute;n de la Nota
+                    </button>
+                </h2>
+            </div>
+            <div id="datosNotacontable" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="card-body">
+                    <table class="table-responsive-md table-hover table-borderless  ">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Tipo nota contable</th>
+                                <th>Pa&iacute;s</th>
+                                <th>Unidad comercial</th>
+                                <th>Entidad legal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{listaDetalles.tipoNota}}</td>
+                                <td>{{listaDetalles.pais}}</td>
+                                <td>{{listaDetalles.unidadComercial}}</td>
+                                <td>{{listaDetalles.entidadLegal}}</td>
+                            </tr>
+                        </tbody>
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Tipo moneda</th>
+                                <th>Negocio</th>
+                                <th>Concepto</th>
+                                <th>Regi&oacute;n</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{listaDetalles.tipoMoneda}}</td>
+                                <td>{{listaDetalles.negocio}}</td>
+                                <td>{{listaDetalles.concepto}}</td>
+                                <td>{{listaDetalles.region}}</td>
+                            </tr>
+                        </tbody>
+                        <thead class="thead-light" [hidden]=ocultarValores>
+                            <tr>
+                                <th>Temporada</th>
+                                <th>Programa</th>
+                                <th>A&ntilde;o</th>
+                                <th>Cuenta Contable</th>
+
+                            </tr>
+                        </thead>
+                        <tbody [hidden]=ocultarValores>
+                            <tr>
+                                <td>{{listaDetalles.temporada}}</td>
+                                <td>{{listaDetalles.programa}}</td>
+                                <td>{{listaDetalles.anio}}</td>
+                                <td>{{listaDetalles.cuentaContable}}</td>
+                            </tr>
+                        </tbody>
+                        <thead class="thead-light">
+                            <tr>
+                                <th>UDN</th>
+                                <th>Monto</th>
+                                <th>Monto UDS</th>
+                                <th>Descripci&oacute;n</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{listaDetalles.udns}}</td>
+                                <td>{{listaDetalles.monto}}</td>
+                                <td>{{listaDetalles.montoUSD}}</td>
+                                <td>{{listaDetalles.descripcion}}</td>
+                            </tr>
+                        </tbody>
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Adjuntos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let adjuntos of listaAdjunto" (click)="downloadFile(adjuntos)">
+                                <td><a>{{adjuntos.nombreArchivo}}</a></td>
+                            </tr>
+                        </tbody>
+                    </table> 
+                    <table class="table-responsive-md table-hover table-borderless" [hidden]=ocultarObservaciones>
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Observaci&oacute;n flujo aprobaci&oacute;n</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{listaDetalles.observaciones}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#informacionProductos" aria-expanded="false" aria-controls="informacionProductos">
+                        Datos Productos
+                    </button>
+                </h2>
+            </div>
+            <div id="informacionProductos" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    <table class="table-responsive-md table-hover table-borderless  ">
+                        <thead>
+                            <tr>
+                                <th>Detalle Producto</th>
+                                <th>Cantidad</th>
+                                <th>Vlr. Unitario</th>
+                                <th>N&deg; Lote </th>
+                                <th>N&deg; Factura</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let productosNota of listaProductosNotas">
+                                <td>{{productosNota.descripcionProducto}}</td>
+                                <td>{{productosNota.cantidadProducto}}</td>
+                                <td>{{productosNota.valorU}}</td>
+                                <td>{{productosNota.lote}}</td>
+                                <td>{{productosNota.factura}}</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-danger" (click)="modal.close('Save click',limpiarCerrar())">
+            <a class="text-decoration-none">Cerrar</a>
+        </button>
+    </div>
+</ng-template>
+
+
+
+

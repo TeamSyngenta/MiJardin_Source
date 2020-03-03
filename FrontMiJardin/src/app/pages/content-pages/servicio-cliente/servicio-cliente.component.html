@@ -1,0 +1,332 @@
+<section id="filter" class="mb-3">
+    <div class="row text-left">
+        <div class="col-sm-12 bg-white pl-3 pt-3 pb-1 mb-3">
+            <h4 class="content-header">Servicio al cliente</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="row text-center">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header">
+
+                        </div>
+                        <div class="col-sm-12">
+                            <input type="text" name="buscarTexto" class="form-control col-sm-3 offset-sm-9"  placeholder="Buscar">
+                        </div>
+                        <div class="table-responsive mt-3">
+                            <div class="card-body">
+                                <table class="table table-responsive-sm text-center">
+                                    <thead>
+                                        <tr>
+                                            <th>Id nota contable</th>
+                                            <th>Concepto</th>
+                                            <th>Unidad comercial</th>
+                                            <th>Monto USD</th>
+                                            <th>D&iacute;a</th>
+                                            <th>C&oacute;d. SAP</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="listaNotasSAP" >
+                                        <tr class="text-center" *ngFor="let notaSAP of listaNotasSAP |filter:buscarTexto | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize  ">
+                                            <td>{{notaSAP.idNotaContable}}</td>
+                                            <td>{{notaSAP.nombreConcepto}}</td>
+                                            <td>{{notaSAP.nombreUnidadComercial}}</td>
+                                            <td>{{notaSAP.montoUSD}}</td>
+                                            <td>{{notaSAP.dias}}</td>
+                                            <td>{{notaSAP.codSAP}}</td>
+                                            <td class="fonticon-wrap"><button *ngIf="notaSAP.codSAP.length <= 0" class="btn btn-success" id="verDetalles" (click)="verAcciones(notaSAP,mensajeModalAcciones)"><i class="ft-plus-circle"></i></button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="collectionSize"></ngb-pagination>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!--Inicio modal Detalles-->
+<ng-template #modalVerDetalles let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h6>
+    </div>
+    <div class="accordion" id="accordionExample">
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <h2 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#informacionCliente" aria-expanded="true" aria-controls="informacionCliente">
+                        Informaci&oacute;n Cliente
+                    </button>
+                </h2>
+            </div>
+            <div id="informacionCliente" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                    <table class="table-responsive-md table-hover  ">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Id cliente</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{objDetalles.idCliente}}</td>
+                                <td>{{objDetalles.nombreCliente}}</td>
+                                <td>{{objDetalles.organizacionCliente}}</td>
+                            </tr>
+                        </tbody>
+                        <thead>
+                            <tr>
+                                <th>Tel&eacute;fono</th>
+                                <th>Direcci&oacute;n</th>
+                                <th>Ciudad</th>
+                                <th>Departamento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{objDetalles.telefonoCliente}}</td>
+                                <td>{{objDetalles.direccionCliente}}</td>
+                                <td>{{objDetalles.ciudad}}</td>
+                                <td>{{objDetalles.Region}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#datosNotacontable" aria-expanded="false" aria-controls="datosNotacontable">
+                        Informaci&oacute;n de la Nota
+                    </button>
+                </h2>
+            </div>
+            <div id="datosNotacontable" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="card-body">
+                    <table class="table-responsive-md table-hover table-borderless  ">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Tipo nota contable</th>
+                                <th>Pa&iacute;s</th>
+                                <th>Unidad comercial</th>
+                                <th>Entidad legal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{objDetalles.tipoNota}}</td>
+                                <td>{{objDetalles.pais}}</td>
+                                <td>{{objDetalles.unidadComercial}}</td>
+                                <td>{{objDetalles.entidadLegal}}</td>
+                            </tr>
+                        </tbody>
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Tipo Moneda</th>
+                                <th>Negocio</th>
+                                <th>Regi&oacute;n</th>
+                                <th>Concepto</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{objDetalles.tipoMoneda}}</td>
+                                <td>{{objDetalles.negocio}}</td>
+                                <td>{{objDetalles.region}}</td>
+                                <td>{{objDetalles.concepto}}</td>
+                            </tr>
+                        </tbody>
+                        <thead class="thead-light" [hidden]=ocultarValores>
+                            <tr>
+                                <th>Temporada</th>
+                                <th>Programa</th>
+                                <th>A&ntilde;o</th>
+                                <th>Cuenta Contable</th>
+
+                            </tr>
+                        </thead>
+                        <tbody [hidden]=ocultarValores>
+                            <tr>
+                                <td>{{objDetalles.temporada}}</td>
+                                <td>{{objDetalles.programa}}</td>
+                                <td>{{objDetalles.anio}}</td>
+                                <td>{{objDetalles.cuentaContable}}</td>
+                            </tr>
+                        </tbody>
+                        <thead class="thead-light">
+                            <tr>
+                                <th>UDN</th>
+                                <th>Monto</th>
+                                <th>Monto UDS</th>
+                                <th>Descripci&oacute;n</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{objDetalles.udns}}</td>
+                                <td>{{objDetalles.monto}}</td>
+                                <td>{{objDetalles.montoUSD}}</td>
+                                <td>{{objDetalles.descripcion}}</td>
+                            </tr>
+                        </tbody>
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Adjuntos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let adjuntos of listaAdjunto" [(ngModel)]='adjuntos' (click)="downloadFile(adjuntos)">
+                                <td><a>{{adjuntos.nombreArchivo}}</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#informacionProductos" aria-expanded="false" aria-controls="informacionProductos">
+                        Datos Productos
+                    </button>
+                </h2>
+            </div>
+            <div id="informacionProductos" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    <table class="table-responsive-md table-hover table-borderless  ">
+                        <thead>
+                            <tr>
+                                <th>Detalle Producto</th>
+                                <th>Cantidad</th>
+                                <th>Vlr. Unitario</th>
+                                <th>N&deg; Lote </th>
+                                <th>N&deg; Factura</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let productosNota of listaProductosNotas">
+                                <td>{{productosNota.descripcionProducto}}</td>
+                                <td>{{productosNota.cantidadProducto}}</td>
+                                <td>{{productosNota.valorU}}</td>
+                                <td>{{productosNota.lote}}</td>
+                                <td>{{productosNota.factura}}</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+                <button mat-raised-button color="accent" class="btn btn-danger" (click)="modal.close('Save click')">
+            <a class="text-decoration-none">Cerrar</a>
+        </button>
+    </div>
+</ng-template>
+<!--Fin modal Detalles-->
+<!--Inicio modal SAP-->
+<ng-template #mensajeModalSAP let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h6>
+    </div>
+    <div class="modal-body">
+        <div class="row col-sm-12">
+            <div class="col-sm-4">
+                <label>Id Nota Contable: </label>
+            </div>
+            <div>
+                <label>C&oacute;d SAP</label>
+                
+            </div>
+            <div  class="col-sm-4">
+                <input type="text" class="form-control" id="codigoSAP" [(ngModel)]="codSapForm"  (change)="estadoBoton()" placeholder="C&oacute;d SAP"  />
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-default mb-0" [disabled]=valInputSAP (click)="agregarCodigoSAP(mensajeModalConfirmacion,modal.close('Save click'))">
+            <a class="text-decoration-none">Agregar</a>
+        </button>
+        <button mat-raised-button color="accent" class="btn btn-primary" (click)="modal.close('Save click')">
+            <a class="text-decoration-none">Cancelar</a>
+        </button>
+    </div>
+</ng-template>
+<!--Fin modal SAP-->
+<!--Inicio modal Acciones-->
+<ng-template #mensajeModalAcciones let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h6>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div id="cardServicio" class="col-sm-3 col-sm-6 col-12" (click)="agregarSap(mensajeModalSAP)">
+                <div class="card bg-success">
+                    <div class="card-content">
+                        <div class="px-3 py-3">
+                            <div class="media ">
+                                <div class="media-body white text-center">
+                                    <span>Agregar C&oacute;digo SAP</span>
+                                </div>
+                                <div class="media-right white align-self-center">
+                                    <i class="ft-edit-2  font-large-1 float-right"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="cardServicio" class="col-sm-3 col-sm-6 col-12" (click)="verDetalles(modalVerDetalles)">
+                <div class="card bg-primary">
+                    <div class="card-content">
+                        <div class="px-3 py-3">
+                            <div class="media">
+                                <div class="media-body white text-center">
+                                    <span>Ver Detalles</span>
+                                </div>
+                                <div class="media-right white align-self-center">
+                                    <i class="ft-more-horizontal font-large-1 float-right"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent"  class="btn btn-danger"  (click)="modal.close('Save click')">
+            <a class="text-decoration-none">Cerrar</a>
+        </button>
+    </div>
+</ng-template>
+<!--Fin modal Acciones-->
+<!--Inicio modal confirmacion-->
+<ng-template #mensajeModalConfirmacion let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">SERVICIO CLIENTE - CONFIRMACI&Oacute;N</h6>
+    </div>
+    <div class="modal-body">
+        <span>&iquest;Est&aacute; seguro de agregar el c&oacute;digo SAP a la nota contable?</span>
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-default mb-0" (click)="guardarCodigoSAP(codSapForm,modal.close('Save click'))">
+            <a class="text-decoration-none">Aceptar</a>
+        </button>
+        <button mat-raised-button color="accent" class="btn btn-primary" (click)="modal.close('Save click')">
+            <a class="text-decoration-none">Cancelar</a>
+        </button>
+    </div>
+</ng-template>
+<!--Final modal confirmacion-->

@@ -1,0 +1,476 @@
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<mat-tab-group (selectedTabChange)="cambioPestana($event)" [selectedIndex]="selectedIndex">
+    <mat-tab label="Cliente">
+        <div class="row ">
+            <div class="col-sm-12 bg-white pl-3 pt-3 pb-1 mb-3">
+                <h1 class="content-header">Información del cliente</h1>
+                <h5>Id nota contable: {{idNotaContableMostrar}}</h5>
+            </div>
+        </div>
+        <section id="extended">
+            <div class="container-fluid">
+                <div class="row text-center">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="col-sm-12 bg-white pl-3 pt-3 pb-1 mb-3">
+                                    <div class="form-group  row col-sm-12">
+                                        <div class="col-sm-6">
+                                            <label for="inputCliente">Ingrese c&oacute;digo cliente</label><br />
+                                            <input type="text" id="inputCliente" class="form-control" (change)="typed(codigoClienteInput)" [(ngModel)]="codigoClienteInput" [ngModelOptions]="{standalone: true}">
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label for="idCliente">Lista clientes *</label>
+                                            <select type="text" class="form-control" id="idCliente" (change)="seleccionoCliente($event.target.value); validacionGuardarBorrador()">
+                                                <option selected [value]="0">Seleccione</option>
+                                                <option *ngFor="let cliente of teste; let i = index" [value]="i+1">{{cliente.codCliente}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row col-sm-12">
+                                        <div class="form-group col-sm-3">
+                                            <label for="nombreCliente">Nombre</label>
+                                            <input type="text" class="form-control" id="nombreCliente" [(ngModel)]="clienteSeleccionado.nombreCliente" [ngModelOptions]="{standalone: true}" readonly>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label for="organizacionVentas">Organización de ventas</label>
+                                            <input type="text" class="form-control" id="organizacionVentas" [(ngModel)]="clienteSeleccionado.organizacionVentas" [ngModelOptions]="{standalone: true}" readonly>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label for="codCliente">Identificación</label>
+                                            <input type="text" class="form-control" id="codCliente" [(ngModel)]="clienteSeleccionado.codCliente" [ngModelOptions]="{standalone: true}" readonly>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label for="telefono">Teléfono</label>
+                                            <input type="text" class="form-control" id="telefono" [(ngModel)]="clienteSeleccionado.telefono" [ngModelOptions]="{standalone: true}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="row col-sm-12">
+                                        <div class="form-group col-sm-3">
+                                            <label for="direccion">Dirección</label>
+                                            <input type="text" class="form-control" id="direccion" [(ngModel)]="clienteSeleccionado.direccion" [ngModelOptions]="{standalone: true}" readonly>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label for="ciudad">Ciudad</label>
+                                            <input type="text" class="form-control" id="ciudad" [(ngModel)]="clienteSeleccionado.ciudad" [ngModelOptions]="{standalone: true}" readonly>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label for="region">Región</label>
+                                            <input type="text" class="form-control" id="region" [(ngModel)]="clienteSeleccionado.region" [ngModelOptions]="{standalone: true}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="row col-sm-9" align="center">
+                                        <div id="obligatoriosInfoCliente">(*) Campos Obligatorios</div>
+                                    </div>
+                                    <div>
+                                        <br> <br>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 bg-white pl-3 pt-3 pb-1 mb-3">
+                                    <div class="row text-center col-sm-8 offset-sm-4">
+                                        <button class="btn btn-default" (click)="cancelar(mensajeModalCancelar)">Cancelar</button>&nbsp;
+                                        <button class="btn btn-success" (click)="CambiarPestanaSiguiente()">Siguiente</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </mat-tab>
+    <mat-tab label="Nota Contable">
+        <div class="row ">
+            <div class="col-sm-12 bg-white pl-3 pt-3 pb-1 mb-3">
+                <h1 class="content-header">Modificar nota contable</h1>
+                <h5>Id nota contable: {{idNotaContableMostrar}} </h5>
+            </div>
+        </div>
+        <section id="extended">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="card-body bg-white pl-3 pt-3 pb-1 mb-3">
+                                    <div class="tab-content py-3 px-3 px-sm-0 " id="nav-tabContent">
+                                        <div class="form-body col-sm-12">
+                                            <div class="form-group row">
+                                                <div>
+                                                    <label id="tipoNotaContable">Tipo nota contable:</label> &nbsp;
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <select type="text" class="form-control" [(ngModel)]="datosNotacontable.notaContable.idTipoNota" (change)=" validacionGuardarBorrador()">
+                                                        <option [value]=false>Crédito</option>
+                                                        <option [value]=true>Debito</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-4">
+                                                    <label for="idPais"> País *</label>
+                                                    <input type="text" class="form-control" [(ngModel)]="datosNotacontable.notaContable.nombrePais" readonly />
+
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label for="idUnidadComercial"> Unidad Comercial *</label>
+                                                    <input type="text" class="form-control" [(ngModel)]="datosNotacontable.notaContable.nombreUnidadComercial" readonly />
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label for="idEntidad">Entidad Legal *</label>
+                                                    <select type="text" class="form-control" [(ngModel)]="datosNotacontable.notaContable.idEntidadLegal">
+                                                        <option [value]="0">Seleccione</option>
+                                                        <option *ngFor="let entidad of listaEntidadesLegales" [value]="entidad.idTipo">{{entidad.nombre}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-4">
+                                                    <label for="idTipoMonedas">Tipo Moneda *</label>
+                                                    <select *ngIf="deshabilitarMoneda" type="text" class="form-control" [(ngModel)]="datosNotacontable.notaContable.idTipoMoneda" (change)="seleccionoMoneda($event.target.value)">
+                                                        <option [value]="0">Seleccione</option>
+                                                        <option *ngFor="let tipoMoneda of listaTiposMonedas" [value]="tipoMoneda.idTipo">{{tipoMoneda.nombre}}</option>
+                                                    </select>
+                                                    <select *ngIf="!deshabilitarMoneda" type="text" class="form-control" [(ngModel)]="datosNotacontable.notaContable.idTipoMoneda" (change)="seleccionoMoneda($event.target.value)" disabled>
+                                                        <option [value]="0">Seleccione</option>
+                                                        <option *ngFor="let tipoMoneda of listaTiposMonedas" [value]="tipoMoneda.idTipo">{{tipoMoneda.nombre}}</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label for="idNegocio">Negocio *</label>
+                                                    <select type="text" class="form-control" [(ngModel)]="datosNotacontable.notaContable.idNegocio">
+                                                        <option [value]="0">Seleccione</option>
+                                                        <option *ngFor="let negocio of listaNegocios" [value]="negocio.idTipo">{{negocio.nombre}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-4">
+                                                    <label for="idConcepto">Concepto *</label>
+                                                    <select type="text" class="form-control" [(ngModel)]="datosNotacontable.notaContable.idConcepto" (change)="validacionGuardarBorrador()">
+                                                        <option [value]="0">Seleccione</option>
+                                                        <option *ngFor="let concepto of listaConceptos" [value]="concepto.idTipo">{{concepto.nombre}}</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <div class="col-sm-4">
+                                                    <label for="idUDN">UDN *</label>
+                                                    <select type="text" class="form-control" [(ngModel)]="datosNotacontable.notaContable.idUDN" [disabled]=isMexico>
+                                                        <option [value]="0">Seleccione</option>
+                                                        <option *ngFor="let udn of listaUDN" [value]="udn.idTipo">{{udn.nombre}}</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-4">
+                                                    <label for="monto">Monto *</label>
+                                                    <input *ngIf="tabProducto" type="number" class="form-control" placeholder="Monto" [(ngModel)]="datosNotacontable.notaContable.monto" (ngModelChange)="calcularValorUSD(datosNotacontable.notaContable.idTipoMoneda,mensajeModalError)" min="1" pattern="^[0-9]+">
+                                                    <input *ngIf="!tabProducto" type="number" class="form-control" placeholder="Monto" [(ngModel)]="datosNotacontable.notaContable.monto" readonly min="1" pattern="^[0-9]+">
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label for="monto">Monto en USD*</label>
+                                                    <input type="number" class="form-control" placeholder="USD" [(ngModel)]="datosNotacontable.notaContable.montoUSD" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-4">
+                                                    <label for="message">Descripción *</label>
+                                                    <textarea class="form-control" name="message" placeholder="Descripción" rows="2" ng-maxlength="50" [(ngModel)]="datosNotacontable.notaContable.descripcion" (ngModelChange)="validacionGuardarBorrador()"></textarea>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <div class="col-sm-8">
+                                                        <br>
+                                                        <label>
+                                                            <input type="checkbox" [(ngModel)]="datosNotacontable.notaContable.notificacionCorreo">Notificarme por correo
+                                                        </label>
+                                                        <label>
+                                                            <input *ngIf="monedaSel" type="checkbox" [(ngModel)]="datosNotacontable.notaContable.tipoProducto" (change)="checkProducto(datosNotacontable.notaContable.tipoProducto? true:false)" disabled min="1" pattern="^[0-9]+">
+                                                            <input *ngIf="!monedaSel" type="checkbox" [(ngModel)]="datosNotacontable.notaContable.tipoProducto" (change)="checkProducto(datosNotacontable.notaContable.tipoProducto? true:false)" min="1" pattern="^[0-9]+">Nota contable con producto
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-4">
+                                                    <p> Agregue un archivo como evidencia</p>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <input #file type="file" (change)="uploadArchivo($event)" />
+                                                </div>
+                                                <div class="col-sm-4  {{btnAdjuntar}}">
+                                                    <button class="btn btn-success" id="adjuntar" (click)="agregarTabla(mensajeModalError)"> Adjuntar </button>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row" id="tablaAdjuntos">
+                                                <b class="col-sm-4">Archivos Adjuntos: {{arrayfiles.length}}</b>
+                                                <table id="tablaAdjuntos">
+                                                    <tr *ngFor="let item of datosNotacontable.listaFicheros ; let i = index">
+                                                        <td class="col-sm-4">{{item.nombreArchivo}}</td>
+                                                        <td class="col-sm-1">
+                                                            <div class="material-icons col-sm-4" id="eliminarBotonTabla" title="Eliminar adjunto" (click)="eliminarAdjuntoM(i)">
+                                                                delete_forever
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr *ngFor="let item of arrayfiles ; let i = index">
+                                                        <td class="col-sm-4">{{item.name}}</td>
+                                                        <td class="col-sm-1">
+                                                            <div class="material-icons col-sm-4" id="eliminarBotonTabla" title="Eliminar adjunto" (click)="eliminarAdjunto(i)">
+                                                                delete_forever
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-10 text-justify">
+                                                    <p><b> Recuerde que se puede subir un archivo con un tamaño máximo 20 MB, los archivos permitidos son  fotos, pdf, documentos de office y videos</b></p>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="col-sm-8" id="obligatoriosCrearNota">(*) Campos Obligatorios</div>
+                                                <div>
+                                                    <br> <br>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 bg-white pl-3 pt-3 pb-1 mb-3">
+                                        <div class="row col-sm-10 offset-sm-2">
+                                            <button class="btn btn-default" (click)="CambiarPestanaAnterior()">Atras</button>&nbsp;
+                                            <button class="btn btn-success" (click)="guardarBorrador()" [disabled]=activarBtnGuardar>Aceptar</button>&nbsp;
+                                            <button *ngIf="borrador1" class="btn btn-primary" (click)="guardarBorrador(mensajeModalError,mensajeModalGuardar)" disabled>Guardar Borrador</button>&nbsp;
+                                            <button *ngIf="!borrador1" class="btn btn-primary" (click)="guardarBorrador(mensajeModalError,mensajeModalGuardar)">Guardar Borrador</button>&nbsp;
+                                            <button class="btn btn-default" (click)="cancelar(mensajeModalCancelar)">Cancelar</button>&nbsp;
+                                            <button class="btn btn-success" (click)="CambiarPestanaSiguiente()" [hidden]=verSiguente>Siguiente</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </mat-tab>
+    <mat-tab label="Producto" disabled="{{tabProducto}}">
+        <div class="from-group ">
+            <div class="col-lg-12 col-sm-12 bg-white pl-3 pt-3 pb-1 mb-3">
+                <h1 class="content-header">Adicionar productos</h1>
+                <h5>Id nota contable: {{idNotaContableMostrar}}</h5>
+            </div>
+            <div class="responsive">
+                <div class="col-lg-12 col-sm-12 bg-white pl-3 pt-3 pb-1 mb-3">
+                    <div class="row col-sm-12">
+                        
+                        <div class="col-sm-3">
+                            <label for="idMoneda">Moneda</label>
+                            <select type="text" class="form-control" [(ngModel)]="datosNotacontable.notaContable.idTipoMoneda" (change)="seleccionoMoneda($event.target.value)" disabled>
+                                <option [value]="0">Seleccione</option>
+                                <option *ngFor="let tipoMoneda of listaTiposMonedas" [value]="tipoMoneda.idTipo">{{tipoMoneda.nombre}}</option>
+                            </select>
+
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="idMonto">Monto</label>
+                            <input type="number" class="form-control" id="idMonto" [(ngModel)]="datosNotacontable.notaContable.monto" [ngModelOptions]="{standalone: true}" readonly>
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="monto">Monto en USD*</label>
+                            <input type="number" class="form-control" placeholder="USD" [(ngModel)]="datosNotacontable.notaContable.montoUSD" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="responsive">
+                <div class="col-lg-12 col-sm-12 bg-white pl-3 pt-3 pb-1 mb-3">
+                    <div class=" col-sm-4 card-body" id="card">
+                        <label>Productos</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control " placeholder="Descripci&oacute;n Producto" aria-describedby="button-addon4" [(ngModel)]="nombreProductoMostar" readonly />
+                            <div class=" input-group-append">
+                                <button class="btn btn-success" type="button" id="botonModalProductos" (click)="mostrarProductos(modalBuscarProductos)"><i class="ft-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-sm-12 bg-white pl-3 pt-3 pb-1 mb-3">
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th class="col-lg-8">Descripión </th>
+                                <th class="col-lg-1">Detalles</th>
+                                <th class="col-lg-1">Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="tablaProductosAdd" *ngFor="let nuevoProducto of datosNotacontable.listaProductos">
+                                <td class="col-lg-8">
+                                    <p>{{nuevoProducto.descripcion}}</p>
+                                </td>
+                                <td class="col-lg-1"><button class="btn btn-success" (click)="verDetallesProducto(nuevoProducto,modalverDetallesProductos)"><i class="ft-eye"></i></button></td>
+                                <td class="col-lg-1"><button class="btn btn-success" id="modificarNota" (click)="eliminarProducto(mensajeModalError)"><i class="ft-trash-2"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-sm-12 bg-white pl-3 pt-3 pb-1 mb-3">
+                <div id="contenedorBotones">
+                    <button class="btn btn-default" (click)="CambiarPestanaAnterior()">Atras</button>&nbsp;
+                    <button class="btn btn-success" (click)="guardar(mensajeModalError,mensajeModalGuardar)" [disabled]=activarBtnGuardar>Aceptar</button>&nbsp;
+                    <button *ngIf="borrador1" class="btn btn-primary" (click)="guardarBorrador(mensajeModalError,mensajeModalGuardar)" disabled>Guardar Borrador</button>&nbsp;
+                    <button *ngIf="!borrador1" class="btn btn-primary" (click)="guardarBorrador(mensajeModalError,mensajeModalGuardar)">Guardar Borrador</button>&nbsp;
+                    <button class="btn btn-default" (click)="cancelar(mensajeModalCancelar)">Cancelar</button>&nbsp;
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>
+
+<ng-template #mensajeModalCancelar let-modal data-backdrop="static" data-keyboard="false">
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h6>
+    </div>
+    <div class="modal-body">
+        {{mensajePOPUP}}
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-default mb-0" (click)="recargarPagina(true)">
+            <a class="text-decoration-none">Aceptar</a>
+        </button>
+        <button mat-raised-button color="accent" class="btn btn-primary" (click)="modal.close('Save click')">
+            <a class="text-decoration-none">Cancelar</a>
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #mensajeModalError let-modal data-backdrop="static" data-keyboard="false">
+    <div class="modal-header">
+        <h5 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h5>
+    </div>
+    <div class="modal-body">
+        {{mensajePOPUP}}
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-primary" (click)="recargarPagina(crearVal,modal.close('Save click'))">
+            <a class="text-decoration-none">Salir</a>
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #mensajeModalGuardar let-modal data-backdrop="static" data-keyboard="false">
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h6>
+    </div>
+    <div class="modal-body">
+        {{mensajePOPUP}}
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-primary" (click)="confirmarGuardarNC(mensajeModalError,modal.close('Save click'))">
+            <a class="text-decoration-none">Guardar</a>
+        </button>
+        <button mat-raised-button color="accent" class="btn btn-default mb-0" (click)="modal.close('Save click')">
+            <a class="text-decoration-none">Cancelar</a>
+        </button>
+    </div>
+</ng-template>
+
+
+<ng-template #modalBuscarProductos let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h6>
+    </div>
+    <br />
+    <p style="{{mensajeBuscar}}"> {{mensajeBuscar}}&nbsp;Para realizar la busqueda por descripci&oacute;n ingrese min&iacute;mo 4 caracteres</p>
+    <p style={{mensajeBuscar}}>&nbsp;Para realizar la busqueda por codigo de material ingrese los digitos exactos</p>
+    <div class=" col-sm-12 card-body" id="card">
+        <div class="row col-sm-12">
+            <div class="input-group col-sm-6">
+                <input type="radio" id="parametroBusqueda" name="parametroBusqueda" value=true [(ngModel)]="parametroBusqueda" /> <label for="descripcion">Descripci&oacute;n</label>
+            </div>
+            <div class="input-group col-sm-4 offset-2">
+                <input type="text" class="form-control" aria-describedby="button-addon4" [(ngModel)]="buscarProd" />
+                <div class=" input-group-append">
+                    <button class="btn btn-success" type="button" id="botonModalProductos" (click)="buscarProductos(buscarProd,parametroBusqueda)"><i class="ft-search"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="row col-sm-12">
+            <div class="input-group col-sm-6">
+                <input type="radio" id="parametroBusqueda" name="parametroBusqueda" value=false [(ngModel)]="parametroBusqueda" /> <label for="material">Cod. Material</label>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td>Cod. material</td>
+                    <td>Descripci&oacute;n</td>
+                    <td>Estado</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let produc of listaProductos | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
+                    <td>{{produc.material}}</td>
+                    <td>{{produc.nombre}}</td>
+                    <td>{{produc.estado}}</td>
+                    <td><div class="material-icons col-sm-2" id="agregarPro" (click)="SeleccionarProducto(produc,modal.close('Save click'))">add_circle</div>
+                </tr>
+            </tbody>
+        </table>
+        <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="collectionSize"></ngb-pagination>
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-primary" (click)="modal.close('Save click',limpiarCerrar())">
+            <a class="text-decoration-none">Cancelar</a>
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #modalverDetallesProductos let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h6>
+    </div>
+    <div class=" col-sm-12 card-body" id="card">
+        <div class="col-sm-8">
+            <label> Detalle Producto</label>
+            <input readonly type="text" class="form-control" [(ngModel)]="nombreProductoDetalle" [ngModelOptions]="{standalone: true}" />
+        </div>
+    </div>
+    <div class=" row col-sm-12 card-body" id="detallesProductos">
+        <div class="col-sm-3 ">
+            <label>Cantidad</label>
+            <input readonly type="number" placeholder="Cantidad" class="form-control" name="cantidad" [(ngModel)]="cantidadProductoDetalle" />
+        </div>
+        <div class="col-sm-3 ">
+            <label for="idUnidad">Unidad medida</label>
+            <select readonly type="text" class="form-control" id="idUnidad">
+                <option selected [value]="0">Seleccione</option>
+            </select>
+        </div>
+        <div class="col-sm-3 col-sm-offset-3">
+            <label>Vr. Unitario</label>
+            <input readonly type="number" placeholder="Vr. Unitario" class="form-control" name="vlUnitario" [(ngModel)]="vlrUnitarioProductoDetalle" />
+        </div>
+    </div>
+    <div class="row col-sm-12 card-body" id="detallesProductos">
+        <div class="col-sm-3">
+            <label>N° Lote</label>
+            <input readonly type="text" placeholder="N° Lote" class="form-control" name="nLote" [(ngModel)]="loteProductoDetalle" />
+        </div>
+        <div class="col-sm-3">
+            <label>N° Factura</label>
+            <input readonly type="text" placeholder="N° Factura" class="form-control" [(ngModel)]="facturaProductoDetalle" />
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-danger" (click)="modal.close('Save click',limpiarCerrar())">
+            <a class="text-decoration-none">Cerrar</a>
+        </button>
+
+    </div>
+
+</ng-template>

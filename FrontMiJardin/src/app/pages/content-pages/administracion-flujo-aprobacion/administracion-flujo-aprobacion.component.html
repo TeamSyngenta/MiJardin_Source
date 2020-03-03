@@ -1,0 +1,300 @@
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<div class="row ">
+    <div class="col-sm-12 bg-white pl-3 pt-3 pb-1 mb-3">
+        <h4 class="content-header">Aprobar Notas Contables</h4>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row text-center">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="card-title">Gestión Notas</h1>
+                </div>
+                <div *ngIf="mostrarGrafica">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <canvas baseChart
+                                    [data]="doughnutChartData"
+                                    [labels]="doughnutChartLabels"
+                                    [chartType]="doughnutChartType"
+                                    [colors]="donutColors">
+                            </canvas>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!mostrarGrafica">
+                    <h5>No tiene notas contables asignadas</h5>
+
+                </div>
+            </div>
+    </div>
+</div>
+<section id="extended">
+    <div class="row text-left">
+        <div class="col-sm-12">
+            <div class="card"  *ngIf="listaNotas.length > 0" >
+                <div class="card-header">
+                    <div class="card-content">
+                        <div class="col-md-12">
+                            <h3>Notas pendientes</h3>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" name="buscarTexto" class="form-control col-md-3 offset-md-9" [(ngModel)]=buscarTexto placeholder="Buscar">
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-responsive-md text-center">
+                                <thead>
+                                    <tr>
+                                        <th>Id Nota Contable</th>
+                                        <th>Nombre Cliente</th>
+                                        <th>Tipo Nota</th>
+                                        <th>Estado</th>
+                                        <th>Fecha Creación</th>
+                                        <th>Monto USD</th>
+                                        <th>Usuario</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let notas of listaNotas  | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize ">
+                                        <td>{{notas.idNotaContable}}</td>
+                                        <td>{{notas.nombreCliente}}</td>
+                                        <td>{{notas.tipoNota}}</td>
+                                        <td>{{notas.estado}}</td>
+                                        <td>{{notas.fechaCreacion}}</td>
+                                        <td>{{notas.montoUSD}}</td>
+                                        <td>{{notas.usuarioCreacion}}</td>
+                                        <td class="fonticon-wrap"><button class="btn btn-success" id="verDetalles" (click)="verDetalles(notas, (modalVerDetalles))"><i class="ft-plus-circle"></i></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="collectionSize"></ngb-pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<ng-template #modalVerDetalles let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h6>
+    </div>
+    <div class="accordion" id="accordionExample">
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <h2 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#informacionCliente" aria-expanded="true" aria-controls="informacionCliente">
+                        Informaci&oacute;n Cliente
+                    </button>
+                </h2>
+            </div>
+            <div id="informacionCliente" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                    <table class="table-responsive-md table-hover  ">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Id cliente</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr >
+                                <td>{{objDetalles.idCliente}}</td>
+                                <td>{{objDetalles.nombreCliente}}</td>
+                                <td>{{objDetalles.organizacionCliente}}</td>
+                            </tr>
+                        </tbody>
+                        <thead>
+                            <tr>
+                                <th>Tel&eacute;fono</th>
+                                <th>Direcci&oacute;n</th>
+                                <th>Ciudad</th>
+                                <th>Departamento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{objDetalles.telefonoCliente}}</td>
+                                <td>{{objDetalles.direccionCliente}}</td>
+                                <td>{{objDetalles.ciudad}}</td>
+                                <td>{{objDetalles.Region}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#datosNotacontable" aria-expanded="false" aria-controls="datosNotacontable">
+                        Informaci&oacute;n de la Nota
+                    </button>
+                </h2>
+            </div>
+            <div id="datosNotacontable" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="card-body">
+                    <table class="table-responsive-md table-hover table-borderless  ">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Tipo nota contable</th>
+                                <th>Pa&iacute;s</th>
+                                <th>Unidad comercial</th>
+                                <th>Entidad legal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{objDetalles.tipoNota}}</td>
+                                <td>{{objDetalles.pais}}</td>
+                                <td>{{objDetalles.unidadComercial}}</td>
+                                <td>{{objDetalles.entidadLegal}}</td>
+                            </tr>
+                        </tbody>
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Tipo Moneda</th>
+                                <th>Negocio</th>
+                                <th>Concepto</th>
+                                <th>Regi&oacute;n</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{objDetalles.tipoMoneda}}</td>
+                                <td>{{objDetalles.negocio}}</td>
+                                <td>{{objDetalles.concepto}}</td>
+                                <td>{{objDetalles.region}}</td>
+                            </tr>
+                        </tbody>
+                        <thead class="thead-light">
+                            <tr>
+                                <th>UDN</th>
+                                <th>Monto</th>
+                                <th>Monto UDS</th>
+                                <th>Descripci&oacute;n</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{objDetalles.udns}}</td>
+                                <td>{{objDetalles.monto}}</td>
+                                <td>{{objDetalles.montoUSD}}</td>
+                                <td>{{objDetalles.descripcion}}</td>
+                            </tr>
+                        </tbody>
+                        <thead>
+                            <tr>
+                                <th>Raz&oacute;n</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{objDetalles.razon}}</td>
+                            </tr>
+                        </tbody>
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Adjuntos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let adjuntos of listaAdjunto" [(ngModel)]='adjuntos' (click)="downloadFile(adjuntos)" [ngModelOptions]="{standalone: true}" ngDefaultControl>
+                                <td><a>{{adjuntos.nombreArchivo}}</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#informacionProductos" aria-expanded="false" aria-controls="informacionProductos">
+                        Datos Productos
+                    </button>
+                </h2>
+            </div>
+            <div id="informacionProductos" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    <table class="table-responsive-md table-hover table-borderless  ">
+                        <thead>
+                            <tr>
+                                <th>Detalle Producto</th>
+                                <th>Cantidad</th>
+                                <th>Vlr. Unitario</th>
+                                <th>N&deg; Lote </th>
+                                <th>N&deg; Factura</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let productosNota of listaProductosNotas">
+                                <td>{{productosNota.descripcionProducto}}</td>
+                                <td>{{productosNota.cantidadProducto}}</td>
+                                <td>{{productosNota.valorU}}</td>
+                                <td>{{productosNota.lote}}</td>
+                                <td>{{productosNota.factura}}</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-success" (click)="confirmarGuardarAprobacion(4,mensajeModalGuardar,modal.close('Save click'))">
+            <a class="text-decoration-none">Aprobar</a>
+        </button>
+        
+        <button mat-raised-button color="accent" class="btn btn-primary" (click)="confirmarGuardarAprobacion(5,mensajeModalGuardar,modal.close('Save click'))">
+            <a class="text-decoration-none">Devolver</a>
+        </button>
+        <button mat-raised-button color="accent" class="btn btn-default" (click)="confirmarGuardarAprobacion(3,mensajeModalGuardar,modal.close('Save click'))">
+            <a class="text-decoration-none">Rechazar</a>
+        </button>
+        <button mat-raised-button color="accent" class="btn btn-danger" (click)="modal.close('Save click')">
+            <a class="text-decoration-none">Cerrar</a>
+        </button>
+    </div>
+</ng-template>
+
+
+<ng-template #mensajeModalGuardar let-modal data-backdrop="static" data-keyboard="false">
+    <div class="modal-header">
+        <h6 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h6>
+    </div>
+    <div class="modal-body">
+        {{mensajePOPUP}}
+    </div>
+    <div class="col-sm-10" [hidden]=!mostrarObservacion>
+        <p>ingrese una observaci&oacute;n</p>
+        <textarea class="form-control" name="message" placeholder="Observaci&oacute;n" rows="2" ng-maxlength="50"  (change)="habilitarBotonGuardar($event.target.value)" ></textarea>
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-primary"  (click)="guardarAprobacion(mensajeModalError,modal.close('Save click'))"  [disabled]=habilitarConObservacion>
+            <a class="text-decoration-none">Guardar</a>
+        </button>
+        <button mat-raised-button color="accent" class="btn btn-default mb-0" (click)="modal.close('Save click')">
+            <a class="text-decoration-none">Cancelar</a>
+        </button>
+    </div>
+</ng-template>
+
+
+<ng-template #mensajeModalError let-modal data-backdrop="static" data-keyboard="false">
+    <div class="modal-header">
+        <h5 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h5>
+    </div>
+    <div class="modal-body">
+        {{mensajePOPUP}}
+    </div>
+    <div class="modal-footer">
+        <button mat-raised-button color="accent" class="btn btn-danger" (click)="recargarPagina(modal.close('Save click'))">
+            <a class="text-decoration-none">Cerrar</a>
+        </button>
+    </div>
+</ng-template>

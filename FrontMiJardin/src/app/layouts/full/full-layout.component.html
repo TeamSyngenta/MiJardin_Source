@@ -1,0 +1,44 @@
+<div *ngIf="roles!=null;else sinRoles">
+        <div #wrapper class="wrapper"
+             [ngClass]="{'nav-collapsed': iscollapsed, 'menu-collapsed': iscollapsed, 'sidebar-sm': isSidebar_sm, 'sidebar-lg': isSidebar_lg}"
+             [dir]="options.direction">
+            <div #appSidebar appSidebar class="app-sidebar" (toggleHideSidebar)="toggleHideSidebar($event)"
+                 [ngClass]="{'hide-sidebar': hideSidebar}" data-active-color="white" [attr.data-background-color]="bgColor"
+                 [attr.data-image]="bgImage">
+                <app-sidebar></app-sidebar>
+                <div class="sidebar-background" #sidebarBgImage></div>
+            </div>
+            <app-navbar (toggleHideSidebar)="toggleHideSidebar($event)"></app-navbar>
+            <div class="main-panel">
+                <div class="main-content">
+                    <div class="content-wrapper">
+                        <div class="container-fluid">
+                            <router-outlet></router-outlet>
+                        </div>
+                    </div>
+                </div>
+                <app-footer></app-footer>
+            </div>
+            <!--<app-notification-sidebar></app-notification-sidebar>-->
+        </div>
+
+</div>
+
+<ng-template #sinRoles let-modal>
+    <div class="col-xs-12 text-center">
+        <div class="col-md-6 d-inline-block">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-basic-title">{{tituloPOPUP}}</h4>
+            </div>
+            <div class="modal-body">
+                <p>{{mensajePOPUP}}</p>
+            </div>
+            <div class="modal-footer">
+                <button mat-raised-button color="accent" class="btn btn-primary" (click)="redireccionHome()">
+                    <a class="text-decoration-none text-white">Salir</a>
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
